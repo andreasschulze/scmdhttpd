@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -n "${CERTIFICATE_DIR}" ] && [ -d "${CERTIFICATE_DIR}" ]; then
+  CERTIFICATE_DIR="--certificate_dir=${CERTIFICATE_DIR}"
+fi
+if [ -n "${DATA_DIR}" ] && [ -d "${DATA_DIR}" ]; then
+  DATA_DIR="--data_dir=${DATA_DIR}"
+fi
+if [ -n "${STAGING}" ]; then
+  STAGING='--staging'
+fi
+
+exec env - /scmdhttpd ${CERTIFICATE_DIR} ${DATA_DIR} ${STAGING}

@@ -1,0 +1,10 @@
+services:
+  scmdhttpd:
+    build:
+      context: .
+    environment:
+      STAGING: '1'
+    image: 'scmdhttpd'
+    volumes:
+    - ./certs:/certificate-dir:rw
+    - ./data:/data:ro
