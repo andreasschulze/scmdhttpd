@@ -28,7 +28,7 @@ dynamisch bezogen und aktualisiert.
   Statt Let's Encrypt kann hier [eine andere ACME-Instanz](https://tools.ietf.org/html/rfc8555#section-7.1.1)
   konfiguriert werden. In diesem Fall ist die Option `--staging` belanglos.
 
-* `datadir=<path>
+* `datadir=<path>` 
 
   Die Dateien `vhosts.conf`, `index.html`, `favicon.ico` und `robots.txt`
   werden im Verzeichnis `/data` gesucht, wenn nicht mit `--datadir` ein
