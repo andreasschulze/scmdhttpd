@@ -1,4 +1,6 @@
-# scmdhttpd - Same/Simple Content for Multilple/Many Domains
+# scmdhttpd
+
+_Same/Simple Content for Multiple/Many Domains_
 
 Der Webserver ist für das Hosting von vielen Domains konzipiert. Dabei soll
 überall der gleiche Inhalt ausgeliefert werden. Diese Inhalte bestehen aus
