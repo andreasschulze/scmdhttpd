@@ -1,4 +1,4 @@
-module scmdhttpd
+module github.com/andreasschulze/scmdhttpd
 
 go 1.16
 
