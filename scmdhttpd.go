@@ -102,6 +102,8 @@ func main() {
 					w.Header().Add("X-Content-Type-Options", "nosniff")
 					w.Header().Add("Expect-CT", "max-age=6048000,enforce")
 
+					w.Header().Add("Permissions-Policy", "interest-cohort=()")
+
 					scheme += "s"
 					if r.URL.Path == "/" {
 						http.ServeFile(w, r, *datadir + "/index.html")
