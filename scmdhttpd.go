@@ -87,6 +87,7 @@ func main() {
 			switch r.URL.Path {
 			case "/robots.txt": fallthrough
 			case "/favicon.ico": fallthrough
+                        case "/style.css": fallthrough
 			case "/":
 				var scheme string = "http"
 				if r.TLS == nil {
@@ -94,7 +95,7 @@ func main() {
 					http.Redirect(w, r, "https://" + r.Host + r.URL.Path, http.StatusMovedPermanently)
 				} else {
 					w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
-					w.Header().Add("Content-Security-Policy", "default-src 'none'")
+					w.Header().Add("Content-Security-Policy", "default-src 'self'")
 					w.Header().Add("X-XSS-Protection", "1; mode=block")
 					w.Header().Add("X-Frame-Options", "DENY")
 					w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")

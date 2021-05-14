@@ -4,8 +4,9 @@ _Same/Simple Content for Multiple/Many Domains_
 
 Der Webserver ist für das Hosting von vielen Domains konzipiert. Dabei soll
 überall der gleiche Inhalt ausgeliefert werden. Diese Inhalte bestehen aus
-einer Eingangsseite (`index.html`), einem Favoriten-Icon (`favicon.ico`) und
-einer `robots.txt`, die von Suchmaschinen ausgewertet wird.
+einer Eingangsseite (`index.html`), einem Favoriten-Icon (`favicon.ico`),
+einem CSS-Formatierungen (`style.css`) und einer `robots.txt`, die von
+Suchmaschinen ausgewertet wird.
 
 Der Webserver antwortet nur für Servernamen, die in der Datei
 `/data/vhosts.conf` gefunden werden. So wird verhindert, dass beliebige, dritte
@@ -30,9 +31,9 @@ dynamisch bezogen und aktualisiert.
 
 * `--datadir=<path>` 
 
-  Die Dateien `vhosts.conf`, `index.html`, `favicon.ico` und `robots.txt`
-  werden im Verzeichnis `/data` gesucht, wenn nicht mit `--datadir` ein
-  alternativer Pfad angegeben wird.
+  Die Dateien `vhosts.conf`, `index.html`, `favicon.ico`, `style.css` und
+  `robots.txt` werden im Verzeichnis `/data` gesucht, wenn nicht mit `--datadir`
+  ein alternativer Pfad angegeben wird.
 
 ## Dateien in /data
 
@@ -59,6 +60,10 @@ dynamisch bezogen und aktualisiert.
 * `favicon.ico`
 
   Icon-Datei, die beim Aufruf der URL `/favicon.ico` ausgegeben wird.
+
+* `style.css`
+
+  CSS-Datei, die beim Aufruf der URL `/style.css` ausgegeben wird.
 
 Werden die genannten URLs per HTTP aufgerufen, erfolgt ein
 [permanenter Redirect](https://tools.ietf.org/html/rfc7231#section-6.4.2)
