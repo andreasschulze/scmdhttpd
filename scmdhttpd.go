@@ -104,6 +104,8 @@ func main() {
 
 					w.Header().Add("Permissions-Policy", "interest-cohort=()")
 
+					w.Header().Add("Cache-Control", "public; max-age=86400")
+
 					scheme += "s"
 					if r.URL.Path == "/" {
 						http.ServeFile(w, r, *datadir + "/index.html")
