@@ -5,6 +5,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY *.go .
 RUN go build
+#RUN strip ${GOPATH}/bin/scmdhttpd
 
 FROM debian:buster-slim
 LABEL maintainer="Andreas Schulze"
