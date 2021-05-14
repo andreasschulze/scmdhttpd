@@ -25,14 +25,12 @@ import (
 
 const (
 	certsDir = "certs"
-//	hostsDir = "hosts"
 )
 
 var (
 	certdir           = flag.String("certificate_dir", "certificate-dir", "Directory in which to store certificates.")
 	acmeEndpoint      = flag.String("acme_endpoint", "", "If set, uses a custom ACME endpoint URL. It doesn't make sense to use this with --staging.")
 	staging	          = flag.Bool("staging", false, "If true, uses Let's Encrypt 'staging' environment instead of prod.")
-//	tryCertNoMoreThan = flag.Duration("try_cert_no_more_often_than", 24*time.Hour, "Don't try to request a cert for a host more often than this.")
 	datadir           = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
 
 	// global var
@@ -46,25 +44,6 @@ func hostPolicy() autocert.HostPolicy {
 			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, datadir)
 		}
 		return nil
-/*		hdir := filepath.Join(*certdir, hostsDir)
-		p := filepath.Join(hdir, filepath.Clean(host))
-		if s, err := os.Stat(p); err != nil {
-			if !os.IsNotExist(err) {
-				// Some other unexpected error here.
-				return err
-			}
-		} else if s != nil && time.Now().Sub(s.ModTime()) < *tryCertNoMoreThan {
-			// Too recently attempted this host.
-			return fmt.Errorf("too recently attempted host %s", host)
-		}
-		// Touch the host file.
-		if _, err := os.Stat(hdir); os.IsNotExist(err) {
-			if err := os.MkdirAll(hdir, 0700); err != nil {
-				return err
-			}
-		}
-		_, err := os.Create(p)
-		return err */
 	}
 }
 
@@ -156,7 +135,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, srv_plain.ListenAndServe())
 	}()
 
-	// server https
+	// serve https
 	fmt.Fprintln(os.Stderr, srv_tls.ListenAndServeTLS("", ""))
 
 	os.Exit(1)
