@@ -1,6 +1,8 @@
-# scmdhttpd
+[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions)
 
-_Same/Simple Content for Multiple/Many Domains_
+# scmdhttpd 
+
+Same/Simple Content for Multiple/Many Domains
 
 Der Webserver ist für das Hosting von vielen Domains konzipiert. Dabei soll
 überall der gleiche Inhalt ausgeliefert werden. Diese Inhalte bestehen aus
@@ -29,7 +31,7 @@ dynamisch bezogen und aktualisiert.
   Statt Let's Encrypt kann hier [eine andere ACME-Instanz](https://tools.ietf.org/html/rfc8555#section-7.1.1)
   konfiguriert werden. In diesem Fall ist die Option `--staging` belanglos.
 
-* `--datadir=<path>` 
+* `--datadir=<path>`
 
   Die Dateien `vhosts.conf`, `index.html`, `favicon.ico`, `style.css` und
   `robots.txt` werden im Verzeichnis `/data` gesucht, wenn nicht mit `--datadir`
@@ -47,11 +49,12 @@ dynamisch bezogen und aktualisiert.
   www.example
   ```
 
-  Wird die Datei geändert, muss der Server neu gestartet werden.
+  Wird die Datei geändert, muss der Server neu gestartet werden. Der Inhalt der
+  Datei wird beim Start des Servers in Kleinbuchstaben konvertiert.
 
 * `index.html`
 
-  HTML-Seite, die beim Aufruf der URL `/` ausgegeben wird.
+  HTML-Seite, die beim Aufruf der URL `/` (und `/index.html`) ausgegeben wird.
 
 * `robots.txt`
 
@@ -71,3 +74,23 @@ auf die entsprechnde HTTPS-URL.
 
 Alle anderen URLs werdem mit [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 beantwortet.
+
+## Anfragen für unbekannte Hostnamen
+
+HTTP-Anfragen an den Server mit einem Hostnamen, der nicht in `vhosts.conf`
+konfiguriert ist, werden mit [400 Bad Request](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1)
+beantwortet; bei HTTPS-Anfragen kommt keine TLS-Verbindung zustande.
+
+## Logging
+
+Anfragen werden auf STDOUT geloggt. Das Format entspricht weitgehend dem
+[`combined` Logformat eines NGINX Webservers](https://nginx.org/r/log_format).
+
+Ausnahmen:
+
+- an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
+der Hostname [`$host`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)
+geloggt.
+
+- an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
+immer mit 42 geloggt.

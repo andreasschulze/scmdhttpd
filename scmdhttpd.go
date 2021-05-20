@@ -14,12 +14,11 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-//	"time"
+	"time"
 	"crypto/tls"
 )
 
@@ -34,69 +33,113 @@ var (
 	datadir           = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
 
 	// global var
-	vhosts            string
+	vhosts            []string
 
 )
 
 func hostPolicy() autocert.HostPolicy {
 	return func(ctx context.Context, host string) error {
-		if !strings.Contains(vhosts, strings.ToLower(host)) {
-			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, datadir)
+		if !contains(vhosts, strings.ToLower(host)) {
+			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, *datadir)
 		}
 		return nil
 	}
+}
+
+// https://play.golang.org/p/Qg_uv_inCek
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
+}
+
+func log(r *http.Request, response_status_code int) {
+	var ts = time.Now().Format("02/Jan/2006:15:04:05 -0700")
+	var clientIP string = r.RemoteAddr
+	if colon := strings.LastIndex(clientIP, ":"); colon != -1 {
+		clientIP = clientIP[:colon]
+	}
+	clientIP = strings.ReplaceAll(strings.ReplaceAll(clientIP, "[", ""), "]", "")
+	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, response_status_code, r.Header.Get("Referer"), r.UserAgent())
 }
 
 func main() {
 
 	flag.Parse()
 
-	vhosts_file, err := ioutil.ReadFile(*datadir + "/vhosts.conf")
+	content, err := ioutil.ReadFile(*datadir + "/vhosts.conf")
 	if err != nil {
 		panic(err)
 	}
-	vhosts = string(vhosts_file)
+	// aus dem Dateiinhalt eine einen String aus Kleinbustaben machen
+	vhosts_file := strings.ToLower(string(content))
+
+	// Slice/Array von einzelnen Hostnamen
+	vhosts = strings.Split(string(vhosts_file), "\n")
 
 	if *staging {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 
 	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(vhosts, strings.ToLower(r.Host)) {
+		var lHost = strings.ToLower(r.Host)
+		var lDomain = lHost
+		var redir2domain bool = false
+		var scheme string = "http"
+		if strings.HasPrefix(lHost, "www.") {
+			lDomain = strings.Replace(lHost, "www.", "", 1)
+			redir2domain = true
+		}
+		if r.TLS != nil {
+			scheme += "s"
+		}
+		if !contains(vhosts, lDomain) {
+			log(r, http.StatusBadRequest)
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+		} else {
 			switch r.URL.Path {
-			case "/robots.txt": fallthrough
+			case "/index.html": fallthrough
 			case "/favicon.ico": fallthrough
+			case "/robots.txt": fallthrough
                         case "/style.css": fallthrough
 			case "/":
-				var scheme string = "http"
 				if r.TLS == nil {
 					w.Header().Set("Connection", "close")
-					http.Redirect(w, r, "https://" + r.Host + r.URL.Path, http.StatusMovedPermanently)
-				} else {
-					w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
-					w.Header().Add("Content-Security-Policy", "default-src 'self'")
-					w.Header().Add("X-XSS-Protection", "1; mode=block")
-					w.Header().Add("X-Frame-Options", "DENY")
-					w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
-					w.Header().Add("X-Content-Type-Options", "nosniff")
-					w.Header().Add("Expect-CT", "max-age=6048000,enforce")
-
-					w.Header().Add("Permissions-Policy", "interest-cohort=()")
-
-					w.Header().Add("Cache-Control", "public; max-age=86400")
-
-					scheme += "s"
-					if r.URL.Path == "/" {
-						http.ServeFile(w, r, *datadir + "/index.html")
-					} else {
-						http.ServeFile(w, r, *datadir + r.URL.Path)
-					}
+					http.Redirect(w, r, "https://" + lHost + r.URL.Path, http.StatusMovedPermanently)
+					log(r, 301)
+					return
 				}
-				log.Printf("%s : %s://%s%s : %s\n", r.RemoteAddr, scheme, r.Host, r.URL.Path, r.UserAgent())
+				if redir2domain {
+					w.Header().Set("Connection", "close")
+					http.Redirect(w, r, scheme + "://" + lDomain + r.URL.Path, http.StatusMovedPermanently)
+					log(r, 301)
+					return
+				}
+				w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
+				w.Header().Add("Content-Security-Policy", "default-src 'self'")
+				w.Header().Add("X-XSS-Protection", "1; mode=block")
+				w.Header().Add("X-Frame-Options", "DENY")
+				w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
+				w.Header().Add("X-Content-Type-Options", "nosniff")
+				w.Header().Add("Expect-CT", "max-age=6048000,enforce")
+
+				w.Header().Add("Permissions-Policy", "interest-cohort=()")
+
+				w.Header().Add("Cache-Control", "public; max-age=86400")
+
+				if r.URL.Path == "/" {
+					http.ServeFile(w, r, *datadir + "/index.html")
+				} else {
+					http.ServeFile(w, r, *datadir + r.URL.Path)
+				}
+				log(r, 200)
 				return
 			}
+			http.NotFound(w, r)
 		}
-		http.NotFound(w, r)
 	})
 
 	cm := &autocert.Manager {
