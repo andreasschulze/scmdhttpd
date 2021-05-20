@@ -1,4 +1,5 @@
-[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions)
+[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AGo%20Build)
+[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/CodeQL/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3ACodeQL)
 
 # scmdhttpd 
 
