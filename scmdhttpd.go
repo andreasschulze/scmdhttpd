@@ -86,7 +86,7 @@ func main() {
 		 * wenn --staging benutzt wird, muss das aber sein
 		 * Daher wird die CodeQL-Warning hier deaktiviert
 		 */
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true} // lgtm [go/disabled-certificate-check]
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true} // CodeQL [go/disabled-certificate-check]
 	}
 
 	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
