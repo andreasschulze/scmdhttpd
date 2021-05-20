@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ travis ]
+    branches: [ andreasschulze-patch-1 ]
   pull_request:
-    branches: [ travis ]
+    branches: [ andreasschulze-patch-1 ]
 
 jobs:
 
