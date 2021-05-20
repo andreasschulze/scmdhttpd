@@ -18,8 +18,5 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: go get
-      run: go get -v github.com/andreasschulze/scmdhttpd@andreasschulze-patch-1
-
-    - name: go install
-      run: go install -v github.com/andreasschulze/scmdhttpd@andreasschulze-patch-1
+    - name: go build
+      run: go build -v
