@@ -181,6 +181,8 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
 
+	fmt.Printf("starting scmdHTTPd-1.1.1\n")
+
 	// serve http
 	go func() {
 		fmt.Fprintln(os.Stderr, srv_plain.ListenAndServe())
