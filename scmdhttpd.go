@@ -48,6 +48,8 @@ func hostPolicy() autocert.HostPolicy {
 
 // https://play.golang.org/p/Qg_uv_inCek
 func contains(s []string, str string) bool {
+	// $domain und www.$domain ist ok
+	str = strings.Replace(str, "www.", "", 1)
 	for _, v := range s {
 		if v == str {
 			return true
@@ -103,6 +105,7 @@ func main() {
 		}
 		if !contains(vhosts, lDomain) {
 			log(r, http.StatusBadRequest)
+			fmt.Printf("host %s not listed in %s/vhosts.conf", lDomain, *datadir)
 			http.Error(w, "400 bad request", http.StatusBadRequest)
 		} else {
 			switch r.URL.Path {

@@ -1,7 +1,7 @@
+# scmdhttpd
+
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AGo%20Build)
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/CodeQL/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3ACodeQL)
-
-# scmdhttpd 
 
 Same/Simple Content for Multiple/Many Domains
 
@@ -47,8 +47,14 @@ dynamisch bezogen und aktualisiert.
 
   ```txt
   example
-  www.example
   ```
+
+  Mit diesem Eintrag beantwortet der Service Anfragen für
+
+  * `http://www.example` mit einem Redirect nach `https://www.example`
+  * `https://www.example` mit einem Redirect nach `https://example`
+  * `http://example` mit einem Redirect nach `https://example`
+  * `https://example` mit Inhalten (index.html, ...)
 
   Wird die Datei geändert, muss der Server neu gestartet werden. Der Inhalt der
   Datei wird beim Start des Servers in Kleinbuchstaben konvertiert.
@@ -89,9 +95,9 @@ Anfragen werden auf STDOUT geloggt. Das Format entspricht weitgehend dem
 
 Ausnahmen:
 
-- an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
+* an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
 der Hostname [`$host`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)
 geloggt.
 
-- an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
+* an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
 immer mit 42 geloggt.

@@ -5,6 +5,8 @@ services:
     environment:
       STAGING: '1'
     image: 'scmdhttpd'
+    network_mode: 'host'
+    userns_mode: 'host'
     volumes:
     - ./certs:/certificate-dir:rw
     - ./data:/data:ro
