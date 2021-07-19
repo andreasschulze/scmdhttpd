@@ -7,13 +7,13 @@
 package main
 
 import (
+	"encoding/csv"
         "golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
 
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -33,29 +33,20 @@ var (
 	datadir           = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
 
 	// global var
-	vhosts            []string
+	vhosts	          = make(map[string]string)
 
 )
 
 func hostPolicy() autocert.HostPolicy {
 	return func(ctx context.Context, host string) error {
-		if !contains(vhosts, strings.ToLower(host)) {
+		// $domain und www.$domain ist ok
+		host = strings.Replace(strings.ToLower(host), "www.", "", 1)
+		_, known_vhost :=vhosts[host]
+		if !known_vhost {
 			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, *datadir)
 		}
 		return nil
 	}
-}
-
-// https://play.golang.org/p/Qg_uv_inCek
-func contains(s []string, str string) bool {
-	// $domain und www.$domain ist ok
-	str = strings.Replace(str, "www.", "", 1)
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
 }
 
 func log(r *http.Request, response_status_code int) {
@@ -68,19 +59,46 @@ func log(r *http.Request, response_status_code int) {
 	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, response_status_code, r.Header.Get("Referer"), r.UserAgent())
 }
 
+func readcsvfile(fileName string) (error) {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	r := csv.NewReader(f)
+	r.Comma = ' '
+	r.Comment = '#'
+	r.FieldsPerRecord = -1
+	r.TrimLeadingSpace = true
+
+	entries, err := r.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		key := strings.ToLower(entry[0])
+		if len(entry) == 1 {
+			vhosts[key] = ""
+		} else if len(entry) >= 2 {
+			vhosts[key] = entry[1]
+		} else {
+			fmt.Printf("ignore %v\n", entry)
+		}
+	}
+
+	return nil // keinFehler
+}
+
 func main() {
 
 	flag.Parse()
 
-	content, err := ioutil.ReadFile(*datadir + "/vhosts.conf")
+	err := readcsvfile(*datadir + "/vhosts.conf")
 	if err != nil {
 		panic(err)
 	}
-	// aus dem Dateiinhalt eine einen String aus Kleinbustaben machen
-	vhosts_file := strings.ToLower(string(content))
-
-	// Slice/Array von einzelnen Hostnamen
-	vhosts = strings.Split(string(vhosts_file), "\n")
 
 	if *staging {
 		/* 
@@ -103,10 +121,23 @@ func main() {
 		if r.TLS != nil {
 			scheme += "s"
 		}
-		if !contains(vhosts, lDomain) {
+		// https://blog.golang.org/maps: A two-value assignment tests for the existence of a key
+		redir301, known_domain :=vhosts[lDomain]
+		if !known_domain {
 			log(r, http.StatusBadRequest)
-			fmt.Printf("host %s not listed in %s/vhosts.conf", lDomain, *datadir)
+			fmt.Printf("host %s not listed in %s/vhosts.conf\n", lDomain, *datadir)
 			http.Error(w, "400 bad request", http.StatusBadRequest)
+		} else if redir301 != "" {
+			if r.TLS == nil {
+				w.Header().Set("Connection", "close")
+				http.Redirect(w, r, "https://" + lHost + "/", http.StatusMovedPermanently)
+				log(r, 301)
+				return
+			}
+			w.Header().Set("Connection", "close")
+			http.Redirect(w, r, redir301, http.StatusMovedPermanently)
+			log(r, 301)
+			return
 		} else {
 			switch r.URL.Path {
 			case "/index.html": fallthrough
@@ -181,7 +212,7 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
 
-	fmt.Printf("starting scmdHTTPd-1.1.1\n")
+	fmt.Printf("starting scmdHTTPd-2.0.0\n")
 
 	// serve http
 	go func() {

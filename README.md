@@ -17,6 +17,10 @@ Domains einen DNS-Namen mit der IP-Adresse des Servers propagieren. Es wird
 HTTP und HTTPS unterstützt. Zertifikate werden von der CA Let's Encrypt
 dynamisch bezogen und aktualisiert.
 
+Neben dem Ausliefern von statischen Inhalten unterstützt der Webserver
+HTTP-Redirects.  Der Modus wird pro Eintag in der Datei `vhosts.conf` aktiviert,
+wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
+
 ## Optionen
 
 * `--certificate_dir=<path>`
@@ -43,21 +47,29 @@ dynamisch bezogen und aktualisiert.
 * `vhosts.conf`
 
   Liste mit Hostnamen, für die der Webserver Inhalte liefert. Format: ein
-  Name pro Zeile, kein abschließender Punkt. Beispiel:
+  Name pro Zeile, kein abschließender Punkt. Optional kann als 2. Wert ein
+  Weiterleitungsziel angegeben werden.
+
+  Beispiel:
 
   ```txt
   example
+  example.org https://example.net/foo
   ```
 
-  Mit diesem Eintrag beantwortet der Service Anfragen für
+  Mit diesen Einträgen beantwortet der Service Anfragen für
 
   * `http://www.example` mit einem Redirect nach `https://www.example`
   * `https://www.example` mit einem Redirect nach `https://example`
   * `http://example` mit einem Redirect nach `https://example`
   * `https://example` mit Inhalten (index.html, ...)
+  * `http://www.example.org` mit einem Redirect nach `https://www.example.org`
+  * `https://www.example.org` mit einem Redirect nach `https://example.net/foo`
+  * `http://example.org` mit einem Redirect nach `https://example.org`
+  * `https://example.org` mit einem Redirect nach `https://example.net/foo`
 
-  Wird die Datei geändert, muss der Server neu gestartet werden. Der Inhalt der
-  Datei wird beim Start des Servers in Kleinbuchstaben konvertiert.
+  Wird die Datei geändert, muss der Server neu gestartet werden. Hostnamen
+ (Spalte 1) werden beim Start des Servers in Kleinbuchstaben konvertiert.
 
 * `index.html`
 
