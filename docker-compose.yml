@@ -1,3 +1,4 @@
+version: '3'
 services:
   scmdhttpd:
     build:
@@ -5,6 +6,7 @@ services:
     environment:
       STAGING: '1'
     image: 'scmdhttpd'
+    restart: 'unless-stopped'
     network_mode: 'host'
     userns_mode: 'host'
     volumes:
