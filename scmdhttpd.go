@@ -212,7 +212,7 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
 
-	fmt.Printf("starting scmdHTTPd-2.0.0\n")
+	fmt.Printf("starting scmdHTTPd-2.0.2\n")
 
 	// serve http
 	go func() {
