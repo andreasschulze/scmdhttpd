@@ -39,22 +39,22 @@ func hostPolicy() autocert.HostPolicy {
 	return func(ctx context.Context, host string) error {
 		// $domain und www.$domain ist ok
 		host = strings.Replace(strings.ToLower(host), "www.", "", 1)
-		_, known_vhost := vhosts[host]
-		if !known_vhost {
+		_, knownVhost := vhosts[host]
+		if !knownVhost {
 			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, *datadir)
 		}
 		return nil
 	}
 }
 
-func log(r *http.Request, response_status_code int) {
+func log(r *http.Request, responseStatusCode int) {
 	var ts = time.Now().Format("02/Jan/2006:15:04:05 -0700")
 	var clientIP string = r.RemoteAddr
 	if colon := strings.LastIndex(clientIP, ":"); colon != -1 {
 		clientIP = clientIP[:colon]
 	}
 	clientIP = strings.ReplaceAll(strings.ReplaceAll(clientIP, "[", ""), "]", "")
-	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, response_status_code, r.Header.Get("Referer"), r.UserAgent())
+	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, r.Header.Get("Referer"), r.UserAgent())
 }
 
 func readcsvfile(fileName string) error {
@@ -120,8 +120,8 @@ func main() {
 			scheme += "s"
 		}
 		// https://blog.golang.org/maps: A two-value assignment tests for the existence of a key
-		redir301, known_domain := vhosts[lDomain]
-		if !known_domain {
+		redir301, knownDomain := vhosts[lDomain]
+		if !knownDomain {
 			log(r, http.StatusBadRequest)
 			fmt.Printf("host %s not listed in %s/vhosts.conf\n", lDomain, *datadir)
 			http.Error(w, "400 bad request", http.StatusBadRequest)
@@ -195,19 +195,19 @@ func main() {
 		cm.Client = &acme.Client{DirectoryURL: "https://acme-staging-v02.api.letsencrypt.org/directory"}
 	}
 
-	srv_plain := &http.Server{
+	srvPlain := &http.Server{
 		Addr:    ":http",
 		Handler: http.DefaultServeMux,
 	}
-	srv_tls := &http.Server{
+	srvTLS := &http.Server{
 		Addr:      ":https",
 		Handler:   http.DefaultServeMux,
 		TLSConfig: cm.TLSConfig(),
 	}
 
-	srv_tls.TLSConfig.MinVersion = tls.VersionTLS12
-	srv_tls.TLSConfig.PreferServerCipherSuites = true
-	srv_tls.TLSConfig.CipherSuites = []uint16{
+	srvTLS.TLSConfig.MinVersion = tls.VersionTLS12
+	srvTLS.TLSConfig.PreferServerCipherSuites = true
+	srvTLS.TLSConfig.CipherSuites = []uint16{
 		// same as 'openssl11 cipher -v "ECDHE+AESGCM:ECDHE+CHACHA20"' without RSA
 		tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
 		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
@@ -218,11 +218,11 @@ func main() {
 
 	// serve http
 	go func() {
-		fmt.Fprintln(os.Stderr, srv_plain.ListenAndServe())
+		fmt.Fprintln(os.Stderr, srvPlain.ListenAndServe())
 	}()
 
 	// serve https
-	fmt.Fprintln(os.Stderr, srv_tls.ListenAndServeTLS("", ""))
+	fmt.Fprintln(os.Stderr, srvTLS.ListenAndServeTLS("", ""))
 
 	os.Exit(1)
 }
