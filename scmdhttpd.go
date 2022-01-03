@@ -1,4 +1,3 @@
-
 // https://github.com/danmarg/sts-mate
 // https://blog.cloudflare.com/exposing-go-on-the-internet/
 // https://bruinsslot.jp/post/go-secure-webserver/
@@ -8,10 +7,11 @@ package main
 
 import (
 	"encoding/csv"
-        "golang.org/x/crypto/acme"
+	"golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
 
 	"context"
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"net/http"
@@ -19,7 +19,6 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	"crypto/tls"
 )
 
 const (
@@ -27,21 +26,20 @@ const (
 )
 
 var (
-	certdir           = flag.String("certificate_dir", "certificate-dir", "Directory in which to store certificates.")
-	acmeEndpoint      = flag.String("acme_endpoint", "", "If set, uses a custom ACME endpoint URL. It doesn't make sense to use this with --staging.")
-	staging	          = flag.Bool("staging", false, "If true, uses Let's Encrypt 'staging' environment instead of prod.")
-	datadir           = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
+	certdir      = flag.String("certificate_dir", "certificate-dir", "Directory in which to store certificates.")
+	acmeEndpoint = flag.String("acme_endpoint", "", "If set, uses a custom ACME endpoint URL. It doesn't make sense to use this with --staging.")
+	staging      = flag.Bool("staging", false, "If true, uses Let's Encrypt 'staging' environment instead of prod.")
+	datadir      = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
 
 	// global var
-	vhosts	          = make(map[string]string)
-
+	vhosts = make(map[string]string)
 )
 
 func hostPolicy() autocert.HostPolicy {
 	return func(ctx context.Context, host string) error {
 		// $domain und www.$domain ist ok
 		host = strings.Replace(strings.ToLower(host), "www.", "", 1)
-		_, known_vhost :=vhosts[host]
+		_, known_vhost := vhosts[host]
 		if !known_vhost {
 			return fmt.Errorf("host %s not listed in %s/vhosts.conf", host, *datadir)
 		}
@@ -59,7 +57,7 @@ func log(r *http.Request, response_status_code int) {
 	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, response_status_code, r.Header.Get("Referer"), r.UserAgent())
 }
 
-func readcsvfile(fileName string) (error) {
+func readcsvfile(fileName string) error {
 	f, err := os.Open(fileName)
 	if err != nil {
 		return err
@@ -101,7 +99,7 @@ func main() {
 	}
 
 	if *staging {
-		/* 
+		/*
 		 * CodeQL bemängelt, dass hier Zertifikatsprüfung ausgeschaltet wird
 		 * wenn --staging benutzt wird, muss das aber sein
 		 * Daher wird die CodeQL-Warning hier deaktiviert
@@ -109,7 +107,7 @@ func main() {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true} // CodeQL [go/disabled-certificate-check]
 	}
 
-	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		var lHost = strings.ToLower(r.Host)
 		var lDomain = lHost
 		var redir2domain bool = false
@@ -122,7 +120,7 @@ func main() {
 			scheme += "s"
 		}
 		// https://blog.golang.org/maps: A two-value assignment tests for the existence of a key
-		redir301, known_domain :=vhosts[lDomain]
+		redir301, known_domain := vhosts[lDomain]
 		if !known_domain {
 			log(r, http.StatusBadRequest)
 			fmt.Printf("host %s not listed in %s/vhosts.conf\n", lDomain, *datadir)
@@ -130,7 +128,7 @@ func main() {
 		} else if redir301 != "" {
 			if r.TLS == nil {
 				w.Header().Set("Connection", "close")
-				http.Redirect(w, r, "https://" + lHost + "/", http.StatusMovedPermanently)
+				http.Redirect(w, r, "https://"+lHost+"/", http.StatusMovedPermanently)
 				log(r, 301)
 				return
 			}
@@ -140,20 +138,24 @@ func main() {
 			return
 		} else {
 			switch r.URL.Path {
-			case "/index.html": fallthrough
-			case "/favicon.ico": fallthrough
-			case "/robots.txt": fallthrough
-                        case "/style.css": fallthrough
+			case "/index.html":
+				fallthrough
+			case "/favicon.ico":
+				fallthrough
+			case "/robots.txt":
+				fallthrough
+			case "/style.css":
+				fallthrough
 			case "/":
 				if r.TLS == nil {
 					w.Header().Set("Connection", "close")
-					http.Redirect(w, r, "https://" + lHost + r.URL.Path, http.StatusMovedPermanently)
+					http.Redirect(w, r, "https://"+lHost+r.URL.Path, http.StatusMovedPermanently)
 					log(r, 301)
 					return
 				}
 				if redir2domain {
 					w.Header().Set("Connection", "close")
-					http.Redirect(w, r, scheme + "://" + lDomain + r.URL.Path, http.StatusMovedPermanently)
+					http.Redirect(w, r, scheme+"://"+lDomain+r.URL.Path, http.StatusMovedPermanently)
 					log(r, 301)
 					return
 				}
@@ -170,9 +172,9 @@ func main() {
 				w.Header().Add("Cache-Control", "public; max-age=86400")
 
 				if r.URL.Path == "/" {
-					http.ServeFile(w, r, *datadir + "/index.html")
+					http.ServeFile(w, r, *datadir+"/index.html")
 				} else {
-					http.ServeFile(w, r, *datadir + r.URL.Path)
+					http.ServeFile(w, r, *datadir+r.URL.Path)
 				}
 				log(r, 200)
 				return
@@ -181,10 +183,10 @@ func main() {
 		}
 	})
 
-	cm := &autocert.Manager {
-		Cache:		autocert.DirCache(filepath.Join(*certdir, certsDir)),
-		Prompt:		autocert.AcceptTOS,
-		HostPolicy:	hostPolicy(),
+	cm := &autocert.Manager{
+		Cache:      autocert.DirCache(filepath.Join(*certdir, certsDir)),
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: hostPolicy(),
 	}
 
 	if *acmeEndpoint != "" {
@@ -193,19 +195,19 @@ func main() {
 		cm.Client = &acme.Client{DirectoryURL: "https://acme-staging-v02.api.letsencrypt.org/directory"}
 	}
 
-        srv_plain := &http.Server {
-		Addr: ":http",
+	srv_plain := &http.Server{
+		Addr:    ":http",
 		Handler: http.DefaultServeMux,
 	}
-	srv_tls := &http.Server {
-		Addr: ":https",
-                Handler: http.DefaultServeMux,
+	srv_tls := &http.Server{
+		Addr:      ":https",
+		Handler:   http.DefaultServeMux,
 		TLSConfig: cm.TLSConfig(),
-        }
+	}
 
 	srv_tls.TLSConfig.MinVersion = tls.VersionTLS12
 	srv_tls.TLSConfig.PreferServerCipherSuites = true
-	srv_tls.TLSConfig.CipherSuites = []uint16 {
+	srv_tls.TLSConfig.CipherSuites = []uint16{
 		// same as 'openssl11 cipher -v "ECDHE+AESGCM:ECDHE+CHACHA20"' without RSA
 		tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
 		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
