@@ -10,4 +10,6 @@ if [ -n "${STAGING}" ]; then
   STAGING='--staging'
 fi
 
+# SC2086: Double quote to prevent globbing and word splitting
+# shellcheck disable=SC2086
 exec env - /scmdhttpd ${CERTIFICATE_DIR} ${DATA_DIR} ${STAGING}
