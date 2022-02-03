@@ -17,12 +17,15 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
 
 const (
-	certsDir = "certs"
+	certsDir       = "certs"
+	programName    = "scmdHTTPd"
+	programVersion = "2.0.2"
 )
 
 var (
@@ -30,6 +33,7 @@ var (
 	acmeEndpoint = flag.String("acme_endpoint", "", "If set, uses a custom ACME endpoint URL. It doesn't make sense to use this with --staging.")
 	staging      = flag.Bool("staging", false, "If true, uses Let's Encrypt 'staging' environment instead of prod.")
 	datadir      = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
+	version      = flag.Bool("version", false, "print version and exit.")
 
 	// global var
 	vhosts = make(map[string]string)
@@ -89,9 +93,19 @@ func readcsvfile(fileName string) error {
 	return nil // keinFehler
 }
 
+func versionInfo(prefix string) {
+	// prefix is empty or "starting"
+	fmt.Printf("%s%s-%s\nbuilt with %s\n", prefix, programName, programVersion, runtime.Version())
+}
+
 func main() {
 
 	flag.Parse()
+
+	if *version {
+		versionInfo("")
+		os.Exit(0)
+	}
 
 	err := readcsvfile(*datadir + "/vhosts.conf")
 	if err != nil {
@@ -214,7 +228,7 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
 
-	fmt.Printf("starting scmdHTTPd-2.0.2\n")
+	versionInfo("starting ")
 
 	// serve http
 	go func() {
