@@ -94,7 +94,7 @@ func readcsvfile(fileName string) error {
 }
 
 func versionInfo(prefix string) {
-	// prefix is empty or "starting"
+	// prefix is empty or "starting "
 	fmt.Printf("%s%s-%s\nbuilt with %s\n", prefix, programName, programVersion, runtime.Version())
 }
 
