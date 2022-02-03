@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apache-2.0 License (as the code heavily based on github.com/danmarg/sts-mate)
 - Github Workflow: shellcheck
 - Github Workflow: markdownlint
-- SECURITY: escape new line characters in user-agent before writing to stdout/log
+- SECURITY: escape new line characters in referer and user-agent before writing to stdout/log
 
 ## 2.0.3
 
