@@ -110,8 +110,8 @@ Anfragen werden auf STDOUT geloggt. Das Format entspricht weitgehend dem
 Ausnahmen:
 
 * an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
-der Hostname [`$host`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)
-geloggt.
+  der Hostname [`$host`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)
+  geloggt.
 
 * an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
-immer mit 42 geloggt.
+  immer mit 42 geloggt.
