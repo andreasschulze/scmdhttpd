@@ -9,6 +9,9 @@ RUN go mod download \
 FROM debian:bullseye-slim
 COPY --from=builder /scmdhttpd/scmdhttpd /
 COPY entrypoint /
-RUN chmod 0555 /entrypoint
+RUN apt-get update \
+ && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates \
+ && rm -rf /var/lib/apt/lists/* \
+ && chmod 0555 /entrypoint
 
 ENTRYPOINT ["/entrypoint"]
