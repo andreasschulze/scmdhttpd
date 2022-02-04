@@ -58,7 +58,12 @@ func log(r *http.Request, responseStatusCode int) {
 		clientIP = clientIP[:colon]
 	}
 	clientIP = strings.ReplaceAll(strings.ReplaceAll(clientIP, "[", ""), "]", "")
-	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, r.Header.Get("Referer"), r.UserAgent())
+	// https://owasp.org/www-community/attacks/Log_Injection
+	userAgent := strings.Replace(r.UserAgent(), "\n", "", -1)
+	userAgent = strings.Replace(userAgent, "\r", "", -1)
+	referer := strings.Replace(r.Header.Get("Referer"), "\n", "", -1)
+	referer = strings.Replace(referer, "\r", "", -1)
+	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, referer, userAgent)
 }
 
 func readcsvfile(fileName string) error {
