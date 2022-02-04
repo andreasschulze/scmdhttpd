@@ -1,4 +1,4 @@
-FROM golang:1.16-buster AS builder
+FROM golang:1.17-bullseye AS builder
 
 WORKDIR /scmdhttpd/
 COPY go.mod go.sum ./
@@ -7,7 +7,7 @@ COPY *.go .
 RUN go build
 RUN strip scmdhttpd
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 LABEL maintainer="Andreas Schulze"
 
 COPY --from=builder /scmdhttpd/scmdhttpd /
