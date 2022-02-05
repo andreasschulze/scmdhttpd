@@ -9,4 +9,4 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 )
 
-replace golang.org/x/crypto => github.com/hochhaus/crypto v0.0.0-20220107215148-ba7d272dee0b
+replace golang.org/x/crypto => github.com/hochhaus/crypto v0.0.0-20220205204232-cceb102a4601
