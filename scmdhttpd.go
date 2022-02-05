@@ -203,9 +203,10 @@ func main() {
 	})
 
 	cm := &autocert.Manager{
-		Cache:      autocert.DirCache(filepath.Join(*certdir, certsDir)),
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: hostPolicy(),
+		Cache:           autocert.DirCache(filepath.Join(*certdir, certsDir)),
+		Prompt:          autocert.AcceptTOS,
+		HostPolicy:      hostPolicy(),
+		PreferredChain: "ISRG Root X1",
 	}
 
 	if *acmeEndpoint != "" {

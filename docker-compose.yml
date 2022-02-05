@@ -3,8 +3,8 @@ services:
   scmdhttpd:
     build:
       context: .
-    environment:
-      STAGING: '1'
+#   environment:
+#     STAGING: '1'
     image: 'scmdhttpd'
     restart: 'unless-stopped'
     network_mode: 'host'
