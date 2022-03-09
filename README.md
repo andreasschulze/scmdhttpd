@@ -21,7 +21,7 @@ HTTP und HTTPS unterstützt. Zertifikate werden von der CA Let's Encrypt
 dynamisch bezogen und aktualisiert.
 
 Neben dem Ausliefern von statischen Inhalten unterstützt der Webserver
-HTTP-Redirects.  Der Modus wird pro Eintag in der Datei `vhosts.conf` aktiviert,
+HTTP-Redirects.  Der Modus wird pro Eintrag in der Datei `vhosts.conf` aktiviert,
 wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
 ## Optionen
