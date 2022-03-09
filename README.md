@@ -92,7 +92,7 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
 Werden die genannten URLs per HTTP aufgerufen, erfolgt ein
 [permanenter Redirect](https://tools.ietf.org/html/rfc7231#section-6.4.2)
-auf die entsprechnde HTTPS-URL.
+auf die entsprechende HTTPS-URL.
 
 Alle anderen URLs werden mit [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 beantwortet.
