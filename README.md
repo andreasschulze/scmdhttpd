@@ -36,7 +36,7 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
 * `--acmeEndpoint=<acme-directory-url>`
 
-  Statt Let's Encrypt kann hier [eine andere ACME-Instanz](https://tools.ietf.org/html/rfc8555#section-7.1.1)
+  Statt Let's Encrypt kann hier [eine andere ACME-Instanz](https://datatracker.ietf.org/doc/html/rfc8555#section-7.1.1)
   konfiguriert werden. In diesem Fall ist die Option `--staging` belanglos.
 
 * `--datadir=<path>`
@@ -91,10 +91,10 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
   CSS-Datei, die beim Aufruf der URL `/style.css` ausgegeben wird.
 
 Werden die genannten URLs per HTTP aufgerufen, erfolgt ein
-[permanenter Redirect](https://tools.ietf.org/html/rfc7231#section-6.4.2)
+[permanenter Redirect](https://datatracker.ietf.org/doc/html/rfc7231#section-6.4.2)
 auf die entsprechende HTTPS-URL.
 
-Alle anderen URLs werden mit [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+Alle anderen URLs werden mit [404 Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)
 beantwortet.
 
 ## Anfragen für unbekannte Hostnamen
