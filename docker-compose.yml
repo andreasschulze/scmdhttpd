@@ -1,4 +1,6 @@
 version: '3'
+volumes:
+  certs:
 services:
   scmdhttpd:
     build:
@@ -10,5 +12,5 @@ services:
     network_mode: 'host'
     userns_mode: 'host'
     volumes:
-    - ./certs:/certificate-dir:rw
+    - certs:/certificate-dir:rw
     - ./data:/data:ro
