@@ -198,6 +198,7 @@ func main() {
 				log(r, 200)
 				return
 			}
+			log(r, 404)
 			http.NotFound(w, r)
 		}
 	})
