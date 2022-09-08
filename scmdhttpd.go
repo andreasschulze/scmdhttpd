@@ -71,10 +71,13 @@ func log(r *http.Request, responseStatusCode int) {
 		// https://github.com/golang/go/issues/46308
 		var VersionName string
 		switch r.TLS.Version {
-			// names like postfix use, too
-			case 0x303: VersionName = "TLSv1.2"
-			case 0x304: VersionName = "TLSv1.3"
-			default: VersionName = "?"
+		// names like postfix use, too
+		case 0x303:
+			VersionName = "TLSv1.2"
+		case 0x304:
+			VersionName = "TLSv1.3"
+		default:
+			VersionName = "?"
 		}
 		fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\" tlsversion=%s tlscipher=%s\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, referer, userAgent, VersionName, tls.CipherSuiteName(r.TLS.CipherSuite))
 	}
