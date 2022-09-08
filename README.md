@@ -116,3 +116,6 @@ Ausnahmen:
 
 * an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
   immer mit 42 geloggt.
+
+* bei HTTPS-Anfragen werden nach dem User-Agent TLS-Version sowie TLS-Cipher
+  im Format "tlsversion=... tlscipher=..." ausgegeben.

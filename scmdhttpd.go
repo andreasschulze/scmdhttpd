@@ -25,7 +25,7 @@ import (
 const (
 	certsDir       = "certs"
 	programName    = "scmdHTTPd"
-	programVersion = "2.0.6"
+	programVersion = "2.0.7"
 )
 
 var (
@@ -63,7 +63,21 @@ func log(r *http.Request, responseStatusCode int) {
 	userAgent = strings.Replace(userAgent, "\r", "", -1)
 	referer := strings.Replace(r.Header.Get("Referer"), "\n", "", -1)
 	referer = strings.Replace(referer, "\r", "", -1)
-	fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, referer, userAgent)
+	if r.TLS == nil {
+		fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\"\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, referer, userAgent)
+	} else {
+		// https://pkg.go.dev/crypto/tls#ConnectionState
+		// https://gist.github.com/xjdrew/97be3811966c8300b724deabc10e38e2
+		// https://github.com/golang/go/issues/46308
+		var VersionName string
+		switch r.TLS.Version {
+			// names like postfix use, too
+			case 0x303: VersionName = "TLSv1.2"
+			case 0x304: VersionName = "TLSv1.3"
+			default: VersionName = "?"
+		}
+		fmt.Printf("%s - %s [%s] \"%s %s %s\" %d 42 \"%s\" \"%s\" tlsversion=%s tlscipher=%s\n", clientIP, r.Host, ts, r.Method, r.RequestURI, r.Proto, responseStatusCode, referer, userAgent, VersionName, tls.CipherSuiteName(r.TLS.CipherSuite))
+	}
 }
 
 func readcsvfile(fileName string) error {
