@@ -197,11 +197,11 @@ func main() {
 				}
 				w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
 				w.Header().Add("Content-Security-Policy", "default-src 'none';img-src 'self';style-src 'self';form-action 'none';base-uri 'self';frame-ancestors 'none';upgrade-insecure-requests;")
-				w.Header().Add("X-XSS-Protection", "0")
+				w.Header().Add("X-Xss-Protection", "0")
 				w.Header().Add("X-Frame-Options", "DENY")
 				w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
 				w.Header().Add("X-Content-Type-Options", "nosniff")
-				w.Header().Add("Expect-CT", "max-age=6048000,enforce")
+				w.Header().Add("Expect-Ct", "max-age=6048000,enforce")
 
 				w.Header().Add("Permissions-Policy", "interest-cohort=()")
 
