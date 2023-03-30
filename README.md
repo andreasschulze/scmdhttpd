@@ -26,20 +26,20 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
 ## Optionen
 
-* `--certificate_dir=<path>`
+- `--certificate_dir=<path>`
 
   Verzeichnis, in dem der Server TLS-Zertifikate dauerhaft speichern kann.
 
-* `--staging`
+- `--staging`
 
   Der Server benutzt die 'staging' Umgebung von Let's Encrypt.
 
-* `--acmeEndpoint=<acme-directory-url>`
+- `--acmeEndpoint=<acme-directory-url>`
 
   Statt Let's Encrypt kann hier [eine andere ACME-Instanz](https://datatracker.ietf.org/doc/html/rfc8555#section-7.1.1)
   konfiguriert werden. In diesem Fall ist die Option `--staging` belanglos.
 
-* `--datadir=<path>`
+- `--datadir=<path>`
 
   Die Dateien `vhosts.conf`, `index.html`, `favicon.ico`, `style.css` und
   `robots.txt` werden im Verzeichnis `/data` gesucht, wenn nicht mit `--datadir`
@@ -47,7 +47,7 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
 ## Dateien in /data
 
-* `vhosts.conf`
+- `vhosts.conf`
 
   Liste mit Hostnamen, für die der Webserver Inhalte liefert. Format: ein
   Name pro Zeile, kein abschließender Punkt. Optional kann als 2. Wert ein
@@ -62,31 +62,31 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
   Mit diesen Einträgen beantwortet der Service Anfragen für
 
-  * `http://www.example` mit einem Redirect nach `https://www.example`
-  * `https://www.example` mit einem Redirect nach `https://example`
-  * `http://example` mit einem Redirect nach `https://example`
-  * `https://example` mit Inhalten (index.html, ...)
-  * `http://www.example.org` mit einem Redirect nach `https://www.example.org`
-  * `https://www.example.org` mit einem Redirect nach `https://example.net/foo`
-  * `http://example.org` mit einem Redirect nach `https://example.org`
-  * `https://example.org` mit einem Redirect nach `https://example.net/foo`
+   - `http://www.example` mit einem Redirect nach `https://www.example`
+   - `https://www.example` mit einem Redirect nach `https://example`
+   - `http://example` mit einem Redirect nach `https://example`
+   - `https://example` mit Inhalten (index.html, ...)
+   - `http://www.example.org` mit einem Redirect nach `https://www.example.org`
+   - `https://www.example.org` mit einem Redirect nach `https://example.net/foo`
+   - `http://example.org` mit einem Redirect nach `https://example.org`
+   - `https://example.org` mit einem Redirect nach `https://example.net/foo`
 
   Wird die Datei geändert, muss der Server neu gestartet werden. Hostnamen
   (Spalte 1) werden beim Start des Servers in Kleinbuchstaben konvertiert.
 
-* `index.html`
+- `index.html`
 
   HTML-Seite, die beim Aufruf der URL `/` (und `/index.html`) ausgegeben wird.
 
-* `robots.txt`
+- `robots.txt`
 
   Text-Datei, die beim Aufruf der URL `/robots.txt` ausgegeben wird.
 
-* `favicon.ico`
+- `favicon.ico`
 
   Icon-Datei, die beim Aufruf der URL `/favicon.ico` ausgegeben wird.
 
-* `style.css`
+- `style.css`
 
   CSS-Datei, die beim Aufruf der URL `/style.css` ausgegeben wird.
 
@@ -110,12 +110,12 @@ Anfragen werden auf STDOUT geloggt. Das Format entspricht weitgehend dem
 
 Ausnahmen:
 
-* an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
+- an 3. Stelle wird anstatt [`$remote_user`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_user)
   der Hostname [`$host`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)
   geloggt.
 
-* an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
+- an 7. Stelle wird die Anzahl der Antwortbytes ([`$body_bytes_sent`](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_body_bytes_sent))
   immer mit 42 geloggt.
 
-* bei HTTPS-Anfragen werden nach dem User-Agent TLS-Version sowie TLS-Cipher
+- bei HTTPS-Anfragen werden nach dem User-Agent TLS-Version sowie TLS-Cipher
   im Format "tlsversion=... tlscipher=..." ausgegeben.
