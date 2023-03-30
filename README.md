@@ -72,7 +72,7 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
   * `https://example.org` mit einem Redirect nach `https://example.net/foo`
 
   Wird die Datei geändert, muss der Server neu gestartet werden. Hostnamen
- (Spalte 1) werden beim Start des Servers in Kleinbuchstaben konvertiert.
+  (Spalte 1) werden beim Start des Servers in Kleinbuchstaben konvertiert.
 
 * `index.html`
 
