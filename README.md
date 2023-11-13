@@ -1,9 +1,10 @@
 # scmdhttpd
 
+
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AGo%20Build)
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/CodeQL/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3ACodeQL)
-[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Shellcheck/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AShellcheck)
-[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Markdownlint/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AMarkdownlint)
+[![shellcheck](https://github.com/andreasschulze/scmdhttpd/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions/workflows/shellcheck.yml)
+[![markdownlint](https://github.com/andreasschulze/scmdhttpd/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions/workflows/markdownlint.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/andreasschulze/scmdhttpd)](https://goreportcard.com/report/github.com/andreasschulze/scmdhttpd)
 
 Same/Simple Content for Multiple/Many Domains

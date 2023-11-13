@@ -1,15 +1,12 @@
-
-name: Markdownlint
-
-on: [push, pull_request]
-
+name: markdownlint
+on:
+ push:
+ pull_request:
 jobs:
-  markdownlint:
-
+  run_markdownlint:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    - name: Run mdl
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: Run markdownlint
       uses: actionshub/markdownlint@main
