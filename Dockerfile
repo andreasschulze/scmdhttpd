@@ -1,4 +1,4 @@
-FROM golang:1.18-bullseye AS builder
+FROM golang:1.21-bookworm AS builder
 
 WORKDIR /scmdhttpd/
 COPY go.mod go.sum *.go ./
