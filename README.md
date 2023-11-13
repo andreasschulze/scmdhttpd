@@ -1,6 +1,5 @@
 # scmdhttpd
 
-
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AGo%20Build)
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/CodeQL/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3ACodeQL)
 [![shellcheck](https://github.com/andreasschulze/scmdhttpd/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions/workflows/shellcheck.yml)
@@ -63,14 +62,14 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
   Mit diesen Einträgen beantwortet der Service Anfragen für
 
-   - `http://www.example` mit einem Redirect nach `https://www.example`
-   - `https://www.example` mit einem Redirect nach `https://example`
-   - `http://example` mit einem Redirect nach `https://example`
-   - `https://example` mit Inhalten (index.html, ...)
-   - `http://www.example.org` mit einem Redirect nach `https://www.example.org`
-   - `https://www.example.org` mit einem Redirect nach `https://example.net/foo`
-   - `http://example.org` mit einem Redirect nach `https://example.org`
-   - `https://example.org` mit einem Redirect nach `https://example.net/foo`
+  - `http://www.example` mit einem Redirect nach `https://www.example`
+  - `https://www.example` mit einem Redirect nach `https://example`
+  - `http://example` mit einem Redirect nach `https://example`
+  - `https://example` mit Inhalten (index.html, ...)
+  - `http://www.example.org` mit einem Redirect nach `https://www.example.org`
+  - `https://www.example.org` mit einem Redirect nach `https://example.net/foo`
+  - `http://example.org` mit einem Redirect nach `https://example.org`
+  - `https://example.org` mit einem Redirect nach `https://example.net/foo`
 
   Wird die Datei geändert, muss der Server neu gestartet werden. Hostnamen
   (Spalte 1) werden beim Start des Servers in Kleinbuchstaben konvertiert.
