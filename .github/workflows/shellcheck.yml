@@ -1,16 +1,13 @@
+name: shellcheck
 on:
   push:
-
-name: 'Shellcheck'
-
 jobs:
-  shellcheck:
-    name: Shellcheck
+  run_shellcheck:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run ShellCheck
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: run shellcheck
       uses: ludeeus/action-shellcheck@master
       with:
         severity: style
-        additional_files: 'entrypoint'
