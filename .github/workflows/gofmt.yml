@@ -1,0 +1,24 @@
+name: gofmt
+on:
+  push:
+  pull_request:
+jobs:
+  run_gofmt:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: set up go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 'stable' # echo "go version" in the log
+    - name: run gofmt
+      shell: sh
+      run: |
+        files_with_format_issues="$( find . -name '*.go' -print0 | xargs --null --no-run-if-empty gofmt -l )"
+        echo 'files_with_format_issues:'
+        echo "${files_with_format_issues}"
+        num_files_with_format_issues="$( echo "${files_with_format_issues}" | grep --text --count '^./' || : )"
+        echo 'num_files_with_format_issues:'
+        echo "${num_files_with_format_issues}"
+        exit ${num_files_with_format_issues}
