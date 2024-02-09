@@ -25,7 +25,7 @@ import (
 const (
 	certsDir       = "certs"
 	programName    = "scmdHTTPd"
-	programVersion = "2.1.0"
+	programVersion = "2.2.0"
 )
 
 var (
@@ -250,6 +250,8 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
+	// disable http2 and higher
+	srvTLS.TLSConfig.NextProtos = []string{"http/1.0", "http/1.1"}
 
 	versionInfo("starting ")
 
