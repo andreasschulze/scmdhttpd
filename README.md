@@ -1,6 +1,6 @@
 # scmdhttpd
 
-[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/Go%20Build/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3AGo%20Build)
+[![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/gobuild/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3Agobuild)
 [![Actions Status](https://github.com/andreasschulze/scmdhttpd/workflows/CodeQL/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions?query=workflow%3ACodeQL)
 [![gofmt](https://github.com/andreasschulze/scmdhttpd/actions/workflows/gofmt.yml/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions/workflows/gofmt.yml)
 [![markdownlint](https://github.com/andreasschulze/scmdhttpd/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/andreasschulze/scmdhttpd/actions/workflows/markdownlint.yml)

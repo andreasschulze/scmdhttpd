@@ -1,13 +1,17 @@
 name: shellcheck
 on:
   push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '4 4 1 * *'
 jobs:
   run_shellcheck:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-    - name: run shellcheck
-      uses: ludeeus/action-shellcheck@master
-      with:
-        severity: style
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: run shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: style
