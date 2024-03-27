@@ -91,6 +91,12 @@ wenn dort das Ziel als 2. Wert hinter einem Hostnamen angegeben wird.
 
   CSS-Datei, die beim Aufruf der URL `/style.css` ausgegeben wird.
 
+- `security.txt`
+
+  "vulnerability disclosure information", die beim Aufruf der URL `/.well-known/security.txt`
+  ausgegeben wird. Die Datei sollte inhaltlich [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116.html)
+  entspechen.
+
 Werden die genannten URLs per HTTP aufgerufen, erfolgt ein
 [permanenter Redirect](https://datatracker.ietf.org/doc/html/rfc7231#section-6.4.2)
 auf die entsprechende HTTPS-URL.

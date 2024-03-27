@@ -25,14 +25,14 @@ import (
 const (
 	certsDir       = "certs"
 	programName    = "scmdHTTPd"
-	programVersion = "2.2.1"
+	programVersion = "2.3.0"
 )
 
 var (
 	certdir      = flag.String("certificate_dir", "certificate-dir", "Directory in which to store certificates.")
 	acmeEndpoint = flag.String("acme_endpoint", "", "If set, uses a custom ACME endpoint URL. It doesn't make sense to use this with --staging.")
 	staging      = flag.Bool("staging", false, "If true, uses Let's Encrypt 'staging' environment instead of prod.")
-	datadir      = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt an favicon.ico are found")
+	datadir      = flag.String("data_dir", "/data", "Directory where vhosts.conf, index.html, robots.txt, security.txt and favicon.ico are found")
 	version      = flag.Bool("version", false, "print version and exit.")
 
 	// global var
@@ -182,6 +182,8 @@ func main() {
 				fallthrough
 			case "/style.css":
 				fallthrough
+			case "/.well-known/security.txt":
+				fallthrough
 			case "/":
 				if r.TLS == nil {
 					w.Header().Set("Connection", "close")
@@ -209,6 +211,8 @@ func main() {
 
 				if r.URL.Path == "/" {
 					http.ServeFile(w, r, *datadir+"/index.html")
+				} else if r.URL.Path == "/.well-known/security.txt" {
+					http.ServeFile(w, r, *datadir+"/security.txt")
 				} else {
 					http.ServeFile(w, r, *datadir+r.URL.Path)
 				}
@@ -251,7 +255,7 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
 	// disable http2 and higher
-	srvTLS.TLSConfig.NextProtos = []string{"http/1.0", "http/1.1"}
+	srvTLS.TLSConfig.NextProtos = []string{"http/1.0", "http/1.1", "acme-tls/1"}
 
 	versionInfo("starting ")
 
