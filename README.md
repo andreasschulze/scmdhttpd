@@ -12,8 +12,8 @@ Same/Simple Content for Multiple/Many Domains
 Der Webserver ist für das Hosting von vielen Domains konzipiert. Dabei soll
 überall der gleiche Inhalt ausgeliefert werden. Diese Inhalte bestehen aus
 einer Eingangsseite (`index.html`), einem Favoriten-Icon (`favicon.ico`),
-CSS-Formatierungen (`style.css`) und einer `robots.txt`, die von Suchmaschinen
-ausgewertet wird.
+CSS-Formatierungen (`style.css`) einer `robots.txt`, die von Suchmaschinen
+ausgewertet wird, sowie einer `security.txt` nach RFC 9119.
 
 Der Webserver antwortet nur für Servernamen, die in der Datei
 `/data/vhosts.conf` gefunden werden. So wird verhindert, dass beliebige, dritte
