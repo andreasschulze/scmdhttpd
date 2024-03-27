@@ -25,7 +25,7 @@ import (
 const (
 	certsDir       = "certs"
 	programName    = "scmdHTTPd"
-	programVersion = "2.3.0"
+	programVersion = "2.3.1"
 )
 
 var (
