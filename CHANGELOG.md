@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - RFC 9116 support
 - FIX: fetching ACME certs was broken, don't use 2.2.x!
-- use go-1.22.x
 
 ## 2.2.1
 
