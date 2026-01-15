@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.3.2
 
 - entrypoint support pass-through ENV[GODEBUG]
+  https://pkg.go.dev/runtime#hdr-Environment_Variables say
+  "... is a comma-separated list of name=val pairs ..."
 
 ## 2.3.1
 
