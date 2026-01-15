@@ -25,7 +25,7 @@ import (
 const (
 	certsDir       = "certs"
 	programName    = "scmdHTTPd"
-	programVersion = "2.3.2"
+	programVersion = "2.3.3"
 )
 
 var (
@@ -49,6 +49,18 @@ func hostPolicy() autocert.HostPolicy {
 		}
 		return nil
 	}
+}
+
+func addSecurityHeader(w http.ResponseWriter) {
+	w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
+	w.Header().Add("Content-Security-Policy", "default-src 'none';img-src 'self';style-src 'self';form-action 'none';base-uri 'self';frame-ancestors 'none';upgrade-insecure-requests;")
+	w.Header().Add("X-Xss-Protection", "0")
+	w.Header().Add("X-Frame-Options", "DENY")
+	w.Header().Add("Referrer-Policy", "no-referrer")
+	w.Header().Add("X-Content-Type-Options", "nosniff")
+	w.Header().Add("Expect-Ct", "max-age=6048000,enforce")
+	w.Header().Add("Permissions-Policy", "interest-cohort=()")
+	w.Header().Add("Cache-Control", "max-age=86400, must-revalidate")
 }
 
 func log(r *http.Request, responseStatusCode int) {
@@ -169,6 +181,7 @@ func main() {
 				return
 			}
 			w.Header().Set("Connection", "close")
+			addSecurityHeader(w)
 			http.Redirect(w, r, redir301, http.StatusMovedPermanently)
 			log(r, 301)
 			return
@@ -193,21 +206,12 @@ func main() {
 				}
 				if redir2domain {
 					w.Header().Set("Connection", "close")
+					addSecurityHeader(w)
 					http.Redirect(w, r, scheme+"://"+lDomain+r.URL.Path, http.StatusMovedPermanently)
 					log(r, 301)
 					return
 				}
-				w.Header().Add("Strict-Transport-Security", "max-age=31536000; includeSubdomains")
-				w.Header().Add("Content-Security-Policy", "default-src 'none';img-src 'self';style-src 'self';form-action 'none';base-uri 'self';frame-ancestors 'none';upgrade-insecure-requests;")
-				w.Header().Add("X-Xss-Protection", "0")
-				w.Header().Add("X-Frame-Options", "DENY")
-				w.Header().Add("Referrer-Policy", "no-referrer")
-				w.Header().Add("X-Content-Type-Options", "nosniff")
-				w.Header().Add("Expect-Ct", "max-age=6048000,enforce")
-
-				w.Header().Add("Permissions-Policy", "interest-cohort=()")
-
-				w.Header().Add("Cache-Control", "max-age=86400, must-revalidate")
+				addSecurityHeader(w)
 
 				if r.URL.Path == "/" {
 					http.ServeFile(w, r, *datadir+"/index.html")
