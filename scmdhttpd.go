@@ -258,8 +258,10 @@ func main() {
 		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
 		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
 	}
-	// disable http2 and higher
-	srvTLS.TLSConfig.NextProtos = []string{"http/1.0", "http/1.1", "acme-tls/1"}
+	// disable http2
+	srvTLS.Protocols = new(http.Protocols)
+	srvTLS.Protocols.SetHTTP1(true)
+	// srvTLS.Protocols.SetHTTP2(false) // this is default
 
 	versionInfo("starting ")
 
