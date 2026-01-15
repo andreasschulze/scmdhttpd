@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add security header also when responding with a redirect
 - updated the way to disable http2
+- updated required go- and module versions
 
 ## 2.3.2
 
